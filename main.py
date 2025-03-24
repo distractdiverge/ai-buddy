@@ -1,56 +1,31 @@
-import os
-from transformers import AutoModelForCausalLM, AutoTokenizer
 import lmstudio as lms
-
-from tavily import TavilyClient
-
 from dotenv import load_dotenv
-
-def load_model():
-    # TODO: Work on this, it may be trying to load the model directly instead of via LMStudio
-    model_name = "qwen2.5-0.5b-instruct-mlx"
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_pretrained(model_name)
- 
-
-def tool_multiply(a: float, b: float) -> float:
-    """Given two numbers a and b, returns the product of them"""
-    return a * b
+from tools import tool_belt
 
 def chat_with_ai(message: str) -> str:
     model = lms.llm("qwq-32b")
     result = model.respond(message)
     return result
 
-
-####
-#### TODO: Create "Tools" for general purpose LLM to inteact with coding/empathy/math AIs 
-####
-
-
-#### TODO: Add "Search" Tool (via Tavily.us)
-def tool_search(query:str) -> str:
-    """ Search online using the given query. """
-    api_key = os.getenv("TAVILY_KEY")
-    tavily_client = TavilyClient(api_key=api_key)
-    response = tavily_client.search(query)
-    return response
-
-#### TODO: Add "Text Messaging" tool to interact with other humans
+def print_fragment(fragment, round_index=0):
+    print(fragment.content, end="", flush=True)
 
 def act_with_ai(message: str) -> str:
     model = lms.llm("qwq-32b")
-    tools = [tool_multiply, tool_search]
-    model.act(
-        message,
-        tools,
-        on_message=print,
+    chat = lms.Chat("You are a tool using AI focused on finding a solution to the user's problem. Make sure to think step by step")
+    chat.add_user_message(message)
+    
+    return model.act(
+        chat,
+        tools=tool_belt.tools,
+        on_message=chat.append,
+        on_prediction_fragment=print_fragment,
     )
 
 def main():
     load_dotenv()
     print("Hello from ai-buddy!")
-    result = act_with_ai("Search online to answer the following question, What is the name of the state bird of Utah?")
+    result = act_with_ai("What are the main headlines from NYTimes today?")
     print(result)
 
 
