@@ -6,5 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "lmstudio>=1.2.0",
+    "python-dotenv>=1.0.1",
+    "tavily-python>=0.5.1",
     "transformers>=4.50.0",
 ]
