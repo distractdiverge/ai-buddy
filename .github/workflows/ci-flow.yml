@@ -1,0 +1,43 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: AI Buddy
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - id: checkout
+        uses: actions/checkout@v4
+      
+      - id: setup
+        name: Setup uv from pyproject.toml 
+        uses: astral-sh/setup-uv@v5
+        with: 
+          uv-file: "./pyproject.toml"
+      
+      - id: install-dependencies
+        name: Install Dev Dependencies
+        run: uv sync --group dev
+      
+      - id: unit-tests
+        name: Run Pytest --junit-xml-test=test-results.xml
+        run: uv run pytest
+            
+      - name: Surface failing tests
+        if: always()
+        uses: pmeier/pytest-results-action@main
+        with:
+          path: test-results.xml
+          title: Test Results
