@@ -2,6 +2,10 @@ import pytest
 from dotenv import load_dotenv
 from tools.tool_notion import tool_get_page_info, tool_get_page_contents
 
+###
+### This is an integration test, not a unit test, it calls out!!!!
+###
+
 def setup_function(function):
     load_dotenv()
 
