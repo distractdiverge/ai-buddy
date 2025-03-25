@@ -5,6 +5,7 @@ description = "A tool using AI script"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "jsonpath-ng>=1.7.0",
     "lmstudio>=1.2.0",
     "notion-client>=2.3.0",
     "python-dotenv>=1.0.1",
