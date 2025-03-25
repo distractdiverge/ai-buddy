@@ -25,7 +25,7 @@ def act_with_ai(message: str) -> str:
 def main():
     load_dotenv()
     print("Hello from ai-buddy!")
-    result = act_with_ai("What are the main headlines from NYTimes today?")
+    result = act_with_ai("What is the weather in Warrington, PA?")
     print(result)
 
 
